@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('reject_company/{id}',[AuthController::class,'reject_company'])->middleware('can:reject.company');
     Route::post('add_employee',[AuthController::class,'add_employee'])->name('add.employee')->middleware('can:add.employee');
     Route::get('delete_employee/{id}',[AuthController::class,'delete_employee'])->name('delete.employee')->middleware('can:delete.employee');
-    Route::get('deleteAccount',[AuthController::class,'deleteAccount'])->name('delete.account');
+    Route::get('deleteAccount',[AuthController::class,'deleteAccount'])->name('delete.account')->middleware('can:delete.account');
     Route::get('showProfile',[AuthController::class,'showProfile'])->name('show.profile');
     Route::post('updateCompanyProfile',[AuthController::class,'updateCompanyProfile']);
 });
