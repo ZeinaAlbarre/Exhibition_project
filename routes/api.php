@@ -39,5 +39,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('deleteAccount',[AuthController::class,'deleteAccount'])->name('delete.account')->middleware('can:delete.account');
     Route::get('showProfile',[AuthController::class,'showProfile'])->name('show.profile');
     Route::post('updateCompanyProfile',[AuthController::class,'updateCompanyProfile']);
-    //edit
+    
 });
