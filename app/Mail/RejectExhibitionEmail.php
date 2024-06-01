@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AcceptExhibitionEmail extends Mailable
+class RejectExhibitionEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -23,6 +23,6 @@ class AcceptExhibitionEmail extends Mailable
 
     public function build()
     {
-        return $this->markdown('emails.accept_exhibition');
+        return $this->markdown('emails.reject_exhibition');
     }
 }

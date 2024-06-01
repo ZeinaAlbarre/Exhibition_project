@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('exhibitions', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('cover_img');
+            $table->string('cover_img')->nullable();
             $table->text('body');
-            $table->string('start_date');
-            $table->string('end_date');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->string('time');
             $table->integer('price');
             $table->string('location');
-            $table->string('exhibition_map');
+            $table->string('exhibition_map')->nullable();
             $table->boolean('status')->default(0);
             $table->integer('number_of_stands')->nullable();
             $table->timestamps();

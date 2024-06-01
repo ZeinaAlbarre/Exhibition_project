@@ -4,8 +4,8 @@
 
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <title>Exhibition Accepted Template</title>
-    <meta name="description" content="Accept Exhibition Email Template.">
+    <title>Exhibition Rejected Template</title>
+    <meta name="description" content="Reject Exhibition Email Template.">
     <style type="text/css">
         a:hover {text-decoration: underline !important;}
     </style>
@@ -41,14 +41,14 @@
                             </tr>
                             <tr>
                                 <td style="padding:0 35px;">
-                                    <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You have requested To complete the procedures for entering the exhibition information</h1>
                                     <span
                                         style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
                                     <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
                                         Hi {{$name}}
-                                        Congratulations!
-                                        We would like to inform you that your {{$title}} Exhibition has been accepted.
-                                        Please complete entering the rest of the information.
+                                        <br>
+                                        Unfortunately
+                                        We regret to inform you that your {{$title}} Exhibition request has not been accepted at this time.
+                                        You may contact us for further information or to inquire about the reasons for the decision.
                                     </p>
 
                                 </td>
