@@ -84,7 +84,6 @@ class UserService
             if(!is_null($user)&&!is_null($user->code)){
                 $user->delete();
             }
-
             $img=Str::random(32).".".time().'.'.request()->commercial_register->getClientOriginalExtension();
 
             $user=User::query()->create([

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExhibitionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,5 +40,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('deleteAccount',[AuthController::class,'deleteAccount'])->name('delete.account')->middleware('can:delete.account');
     Route::get('showProfile',[AuthController::class,'showProfile'])->name('show.profile');
     Route::post('updateCompanyProfile',[AuthController::class,'updateCompanyProfile']);
-    
+
+    Route::post('addExhibition',[ExhibitionController::class,'addExhibition'])->name('add.exhibition')->middleware('can:add.exhibition');
+    Route::get('showExhibitionRequest',[ExhibitionController::class,'showExhibitionRequest']);
+    Route::get('acceptExhibition/{id}',[ExhibitionController::class,'acceptExhibition'])->name('accept.exhibition')->middleware('can:accept.exhibition');
+    Route::get('rejectExhibition/{id}',[ExhibitionController::class,'rejectExhibition'])->name('reject.exhibition')->middleware('can:reject.exhibition');
+    Route::get('deleteExhibition/{id}',[ExhibitionController::class,'deleteExhibition'])->name('delete.exhibition')->middleware('can:delete.exhibition');
+    Route::post('updateExhibition/{id}',[ExhibitionController::class,'updateExhibition'])->name('update.exhibition')->middleware('can:update.exhibition');
+
 });
