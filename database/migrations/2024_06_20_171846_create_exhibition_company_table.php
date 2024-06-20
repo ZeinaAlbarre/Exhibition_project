@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('exhibition_company', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('exhibition_id')->constrained('exhibitions')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }
