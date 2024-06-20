@@ -175,8 +175,6 @@ class ExhibitionService
     }
 
     //me
-
-
     public function addExhibitionSection($section_id,$exhibition_id)
     {
         $exhibition=Exhibition::query()->where('id', $exhibition_id)->first();
@@ -220,5 +218,29 @@ class ExhibitionService
         return ['data' => $data, 'message' => $message, 'code' => $code];
     }
 
+    public function showOrganizerExhibition($organizer_id)
+    {
+        DB::beginTransaction();
+        try {
+            $exhibitions=Exhibition_organizer::query()->where('id',$organizer_id)->get();
+
+            DB::commit();
+            $data=$exhibitions;
+            $message='Exhibitions have been successfully displayed. ';
+            $code = 200;
+        }catch (\Exception $e) {
+            DB::rollback();
+            $data=[];
+            $message = 'Error during showing exhibitions . Please try again ';
+            $code = 500;
+        }
+        return ['data' => $data, 'message' => $message, 'code' => $code];
+
+    }
+     public function showCompanyRequests($exhibition_id){
+
+
+
+     }
 
 }
