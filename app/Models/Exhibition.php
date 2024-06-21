@@ -59,5 +59,9 @@ class Exhibition extends Model
     {
         return $this->hasMany(Exhibition_sponser::class);
     }
+    public function exhibition_company(): HasMany
+    {
+        return $this->hasMany(Exhibition_company::class);
+    }
 
 }

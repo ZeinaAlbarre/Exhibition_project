@@ -66,7 +66,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Exhibition_organizer::class);
     }
-
+    public function exhibition_company(): HasMany
+    {
+        return $this->hasMany(Exhibition_company::class);
+    }
     public function exhibition_visitor(): HasMany
     {
         return $this->hasMany(Exhibition_visitor::class);

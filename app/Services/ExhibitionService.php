@@ -5,9 +5,17 @@ namespace App\Services;
 use App\Mail\AcceptCompanyemail;
 use App\Mail\AcceptExhibitionEmail;
 use App\Mail\RejectExhibitionEmail;
+use App\Models\Company;
+use App\Models\Company_stand;
 use App\Models\Exhibition;
+use App\Models\Exhibition_company;
 use App\Models\Exhibition_organizer;
+use App\Models\Media;
+use App\Models\Section;
+use App\Models\Stand;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -32,7 +40,7 @@ class ExhibitionService
             ]);
             $exhibitionOrganizer=Exhibition_organizer::query()->create([
                 'exhibition_id'=>$exhibition['id'],
-                'user_id'=>Auth::user()->id,
+                'user_id'=>auth()->id(),
             ]);
             if(request()->hasFile('cover_img')){
                 $img=Str::random(32).".".time().'.'.request()->cover_img->getClientOriginalExtension();
@@ -169,5 +177,164 @@ class ExhibitionService
             return ['data' => [], 'message' => $e->getMessage(), 'code' => $e->getCode()];
         }
     }
+
+    //me
+    public function addExhibitionSection($section_id,$exhibition_id)
+    {
+        $exhibition=Exhibition::query()->where('id', $exhibition_id)->first();
+        $exhibition['section_id']=$section_id;
+        $message = 'delete section successfully';
+        $code = 200;
+        $data = $exhibition;
+
+        return ['data' => $data, 'message' => $message, 'code' => $code];
+    }
+    public function addExhibitionMedia($request,$exhibition_id)
+    {
+
+        $img = Str::random(32) . "." . time() . "." . $request->img->getClientOriginalExtension();
+
+        $media = Media::query()->create([
+            'mediable_id' => $exhibition_id,
+            'mediable_type' => 'App\Models\Exhibition',
+            'url' => $img
+        ]);
+
+        Storage::disk('public')->put($img, file_get_contents($request->file('img')));
+
+        $message = 'add media successfully';
+        $code = 200;
+        $data = [];
+
+        return ['data' => $data, 'message' => $message, 'code' => $code];
+    }
+    public function deleteExhibitionMedia($media_id)
+    {
+
+        $media = Media::query()->where('id','=',$media_id)->first();
+        $media->delete();
+        $media->save();
+
+        $message = 'add media successfully';
+        $code = 200;
+        $data = [];
+
+        return ['data' => $data, 'message' => $message, 'code' => $code];
+    }
+
+    public function showOrganizerExhibition($organizer_id)
+    {
+        DB::beginTransaction();
+        try {
+            $exhibitions=Exhibition_organizer::query()->where('id',$organizer_id)->get();
+
+            DB::commit();
+            $data=$exhibitions;
+            $message='Exhibitions have been successfully displayed. ';
+            $code = 200;
+        }catch (\Exception $e) {
+            DB::rollback();
+            $data=[];
+            $message = 'Error during showing exhibitions . Please try again ';
+            $code = 500;
+        }
+        return ['data' => $data, 'message' => $message, 'code' => $code];
+
+    }
+    public function showCompany($company_id){
+
+         DB::beginTransaction();
+         try {
+             $company = Company::query()->where('id',$company_id)->get();
+             DB::commit();
+             $data=$company;
+             $message='company has been successfully displayed. ';
+             $code = 200;
+         }catch (\Exception $e) {
+             DB::rollback();
+             $data=[];
+             $message = 'Error during showing company . Please try again ';
+             $code = 500;
+         }
+         return ['data' => $data, 'message' => $message, 'code' => $code];
+
+
+     }
+    public function showCompanyRequests($exhibition_id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $companyRequests = Exhibition_company::where('exhibition_id', $exhibition_id)
+                ->where('status', 0)
+                ->get();
+
+            DB::commit();
+
+            $data = $companyRequests; // Return the collection of requests
+            $message = 'Company requests have been successfully retrieved.';
+            $code = 200;
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            $data = [];
+            $message = 'Error retrieving company requests. Please try again.';
+            $code = 500;
+        }
+
+        return ['data' => $data, 'message' => $message, 'code' => $code];
+    }
+
+    public function acceptCompanyRequest($exhibition_id,$company_id):array
+    {
+        DB::beginTransaction();
+        try{
+            $companyRequest = Exhibition_company::where('exhibition_id', $exhibition_id)
+                ->where('user_id', $company_id)
+                ->get();
+
+            $companyRequest['status']=1;
+            $companyRequest->save();
+
+            DB::commit();
+            $data=$companyRequest;
+            $message='company accepted successfully. ';
+            $code = 200;
+        }catch (\Exception $e) {
+            DB::rollback();
+            $data=[];
+            $message = 'Error';
+            $code = 500;
+        }
+
+
+        return ['user'=>$data,'message'=>$message,'code'=>$code];
+    }
+
+    public function reject_company($exhibition_id,$company_id):array
+    {
+        DB::beginTransaction();
+        try{
+              $companyRequest = Exhibition_company::where('exhibition_id', $exhibition_id)
+                ->where('user_id', $company_id)
+                ->delete();
+
+
+            DB::commit();
+            $data=[];
+            $message='company rejected successfully. ';
+            $code = 200;
+        }catch (\Exception $e) {
+            DB::rollback();
+            $data=[];
+            $message = 'Error';
+            $code = 500;
+        }
+
+
+        return ['user'=>$data,'message'=>$message,'code'=>$code];
+    }
+
 
 }
