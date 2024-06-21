@@ -11,9 +11,11 @@ use App\Models\Exhibition;
 use App\Models\Exhibition_company;
 use App\Models\Exhibition_organizer;
 use App\Models\Media;
+use App\Models\Scheduale;
 use App\Models\Section;
 use App\Models\Stand;
 use App\Models\User;
+use Illuminate\Console\Scheduling\Schedule;
 use Spatie\Permission\Models\Role;
 
 use Illuminate\Support\Facades\Auth;
@@ -336,5 +338,184 @@ class ExhibitionService
         return ['user'=>$data,'message'=>$message,'code'=>$code];
     }
 
+     public function AddScheduale($exhibition_id,$request){
+         $img=Str::random(32).".".time().'.'.request()->img->getClientOriginalExtension();
 
+         DB::beginTransaction();
+         try{
+             $schedule=Scheduale::query()->create([
+
+                'topic_name'=>$request['topic_name'],
+                 'speaker_name'=>$request['speaker_name'],
+                 'summary'=>$request['summary'],
+                 'body'=>$request['body'],
+                 'time'=>$request['time'],
+                 'date'=>$request['date'],
+                 'about_speaker'=>$request['about_speaker'],
+                 'img'=>$img,
+                 'speaker_email'=>$request['speaker_email'],
+                 'linkedin'=>$request['linkedin'],
+                 'facebook'=>$request['facebook'],
+                 'exhibition_id'=>$exhibition_id
+
+             ]);
+             Storage::disk('public')->put($img, file_get_contents($request['img']));
+             $schedule->save();
+
+             DB::commit();
+             $data=$schedule;
+             $message = ' schedule added successfully. ';
+             $code = 200;
+             return ['data' => $data, 'message' => $message, 'code' => $code];
+
+         }catch (\Exception $e) {
+             DB::rollback();
+             $data=[];
+             $message = 'Error during adding schedule. Please try again ';
+             $code = 500;
+             return ['data' => $data, 'message' => $e->getMessage(), 'code' => $code];
+
+         }
+     }
+
+    public function deleteSschedule($schedule_id){
+        DB::beginTransaction();
+        try {
+            $schedule=Scheduale::query()->find($schedule_id);
+            $schedule->delete();
+            DB::commit();
+            $message=' schedule deleted successfully. ';
+            $code = 200;
+            return ['data' => [], 'message' => $message, 'code' => $code];
+
+        }catch (\Exception $e) {
+            DB::rollback();
+            $message = 'Error during deleting schedule. Please try again ';
+            $code = 500;
+            return ['data' => [], 'message' => $e->getMessage(), 'code' => $e->getCode()];
+        }
+    }
+
+    public function updateSchedule($schedule_id, $request)
+    {
+        try {
+            $schedule = Schedule::findOrFail($schedule_id); // Find the schedule or throw an exception
+
+            DB::beginTransaction();
+
+            // Update image if a new one is provided
+            if ($request->hasFile('img')) {
+                // Delete the old image
+                Storage::disk('public')->delete($schedule->img);
+
+                // Store the new image
+                $img = Str::random(32) . "." . time() . '.' . $request->img->getClientOriginalExtension();
+                Storage::disk('public')->put($img, file_get_contents($request->img));
+
+                $schedule->img = $img;
+            }
+
+
+            $schedule->update([
+                'topic_name' => $request->input('topic_name'),
+                'speaker_name' => $request->input('speaker_name'),
+                'summary' => $request->input('summary'),
+                'body' => $request->input('body'),
+                'time' => $request->input('time'),
+                'date' => $request->input('date'),
+                'about_speaker' => $request->input('about_speaker'),
+                'speaker_email' => $request->input('speaker_email'),
+                'linkedin' => $request->input('linkedin'),
+                'facebook' => $request->input('facebook'),
+                'exhibition_id' => $schedule['exhibition_id'],
+            ]);
+
+            DB::commit();
+                $data = $schedule;
+                $message ='Schedule updated successfully.';
+                $code = 200;
+               return ['data' => $data, 'message' => $message, 'code' => $code];
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            $data = [];
+            $message = 'Error updating schedule: ' . $e->getMessage();
+            $code = 500;
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+        }
+    }
+
+    public  function showScheduale($schedule_id){
+
+        DB::beginTransaction();
+        try {
+            $schedule = Schedule::findOrFail($schedule_id);
+            DB::commit();
+            $data=$schedule;
+            $message=' schedule has been successfully displayed. ';
+            $code = 200;
+        }catch (\Exception $e) {
+            DB::rollback();
+            $data=[];
+            $message = 'Error during showing schedule . Please try again ';
+            $code = 500;
+        }
+        return ['data' => $data, 'message' => $message, 'code' => $code];
+
+    }
+
+     public function showExhibitionScheduale($exhibition_id){
+         DB::beginTransaction();
+
+         try {
+             $scheduale = Scheduale::where('exhibition_id', $exhibition_id)->get();
+             DB::commit();
+             $data = $scheduale;
+             $message = 'scheduale  have been successfully show.';
+             $code = 200;
+         } catch (\Exception $e) {
+             DB::rollback();
+             $data = [];
+             $message = 'Error . Please try again.';
+             $code = 500;
+         }
+
+         return ['data' => $data, 'message' => $message, 'code' => $code];
+
+     }
+
+
+
+    public function addStand($request,$exhibition_id)
+    {
+
+        DB::beginTransaction();
+
+        try {
+
+            $stand = Stand::create([
+                'name' => $request['name'],
+                'size' =>  $request['size'],
+                'price' =>  $request['price'],
+                'status' => $request->input('status', 0),
+                'exhibition_id' => $exhibition_id,
+            ]);
+
+            DB::commit();
+
+                $data = $stand;
+                $message = 'Stand added successfully.';
+                $code = 200;
+
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data = [];
+            $message = $e->getMessage();
+            $code = 500;
+
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+        }
+    }
 }
