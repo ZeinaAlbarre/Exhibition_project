@@ -371,9 +371,9 @@ class ExhibitionService
          }catch (\Exception $e) {
              DB::rollback();
              $data=[];
-             $message = 'Error during adding schedule. Please try again ';
+             $message = $e->getMessage();
              $code = 500;
-             return ['data' => $data, 'message' => $e->getMessage(), 'code' => $code];
+             return ['data' => $data, 'message' => $message, 'code' => $code];
 
          }
      }
@@ -392,7 +392,7 @@ class ExhibitionService
             DB::rollback();
             $message = 'Error during deleting schedule. Please try again ';
             $code = 500;
-            return ['data' => [], 'message' => $e->getMessage(), 'code' => $e->getCode()];
+            return ['data' => [], 'message' => $message, 'code' => $e->getCode()];
         }
     }
 
@@ -485,8 +485,6 @@ class ExhibitionService
 
      }
 
-
-
     public function addStand($request,$exhibition_id)
     {
 
@@ -516,6 +514,54 @@ class ExhibitionService
             $code = 500;
 
             return ['data' => $data, 'message' => $message, 'code' => $code];
+        }
+    }
+
+    public function updateStand($request ,$stand_id){
+
+        DB::beginTransaction();
+
+        try {
+            $stand = Stand::findOrFail($stand_id);
+            $stand->update([
+                'name' => $request['name'],
+                'size' =>  $request['size'],
+                'price' =>  $request['price'],
+                'status' => $request->input('status', 0),
+                'exhibition_id' => $stand['exhibition_id'],
+            ]);
+
+            DB::commit();
+
+            $data = $stand;
+            $message = 'Stand updated successfully.';
+            $code = 200;
+
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data = [];
+            $message = $e->getMessage();
+            $code = 500;
+
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+        }
+    }
+    public function deleteStand($stand_id){
+        DB::beginTransaction();
+        try {
+            $stand=Stand::query()->find($stand_id);
+            $stand->delete();
+            DB::commit();
+            $message=' stand deleted successfully. ';
+            $code = 200;
+            return ['data' => [], 'message' => $message, 'code' => $code];
+
+        }catch (\Exception $e) {
+            DB::rollback();
+            $message = 'Error during deleting stand. Please try again ';
+            $code = 500;
+            return ['data' => [], 'message' => $message, 'code' => $e->getCode()];
         }
     }
 }
