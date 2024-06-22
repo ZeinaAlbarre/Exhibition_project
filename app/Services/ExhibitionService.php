@@ -377,7 +377,10 @@ class ExhibitionService
         return ['user'=>$data,'message'=>$message,'code'=>$code];
     }
 
+     public function AddScheduale($exhibition_id,$request){
+         $img=Str::random(32).".".time().'.'.request()->img->getClientOriginalExtension();
 
+<<<<<<< HEAD
     public function showEmployeeExhibition()
     {
 
@@ -538,6 +541,8 @@ class ExhibitionService
 
      public function AddScheduale($exhibition_id,$request){
          $img=Str::random(32).".".time().'.'.request()->img->getClientOriginalExtension();
+=======
+>>>>>>> 499ddb568d78af4475c237bf2e3cafb57fffe35d
          DB::beginTransaction();
          try{
              $schedule=Scheduale::query()->create([
@@ -662,7 +667,11 @@ class ExhibitionService
 
     }
 
+<<<<<<< HEAD
     public function showExhibitionScheduale($exhibition_id){
+=======
+     public function showExhibitionScheduale($exhibition_id){
+>>>>>>> 499ddb568d78af4475c237bf2e3cafb57fffe35d
          DB::beginTransaction();
 
          try {
@@ -744,7 +753,10 @@ class ExhibitionService
             return ['data' => $data, 'message' => $message, 'code' => $code];
         }
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 499ddb568d78af4475c237bf2e3cafb57fffe35d
     public function deleteStand($stand_id){
         DB::beginTransaction();
         try {
