@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\addStandRequest;
 use App\Http\Requests\ExhibitionRequest;
 use App\Http\Requests\ExhibitionStatusRequest;
 use App\Http\Requests\SearchExhibitionRequest;
@@ -187,7 +188,7 @@ class ExhibitionController extends Controller
         }
     }
 
-    public function addExhibitionMedia(Request $request, $exhibition_id)
+    public function addExhibitionMedia(addExhibitionMediaRequest $request, $exhibition_id)
     {
         try {
             $response = $this->exhibitionService->addExhibitionMedia($request, $exhibition_id);
@@ -270,7 +271,7 @@ class ExhibitionController extends Controller
         }
     }
 
-    public function addSchedule($exhibition_id, Request $request)
+    public function addSchedule($exhibition_id, addScheduleRequest $request)
     {
         $data=[];
         try{
@@ -330,7 +331,7 @@ class ExhibitionController extends Controller
         }
     }
 
-    public function addStand(Request $request, $exhibition_id)
+    public function addStand(addStandRequest $request, $exhibition_id)
     {
         $data=[];
         try{

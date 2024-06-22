@@ -377,7 +377,7 @@ class ExhibitionService
         return ['user'=>$data,'message'=>$message,'code'=>$code];
     }
 
-     public function AddScheduale($exhibition_id,$request){
+     public function addSchedule($exhibition_id,$request){
          $img=Str::random(32).".".time().'.'.request()->img->getClientOriginalExtension();
          DB::beginTransaction();
          try{
@@ -416,7 +416,7 @@ class ExhibitionService
          }
      }
 
-    public function deleteSschedule($schedule_id){
+    public function deleteSchedule($schedule_id){
         DB::beginTransaction();
         try {
             $schedule=Scheduale::query()->find($schedule_id);
@@ -484,7 +484,7 @@ class ExhibitionService
         }
     }
 
-    public  function showScheduale($schedule_id){
+    public  function showSchedule($schedule_id){
 
         DB::beginTransaction();
         try {
@@ -504,7 +504,7 @@ class ExhibitionService
     }
 
 
-     public function showExhibitionScheduale($exhibition_id){
+     public function showExhibitionSchedule($exhibition_id){
          DB::beginTransaction();
 
          try {
