@@ -17,7 +17,7 @@ class FavoriteService
                 'exhibition_id'=>$exhibition_id,
             ]);
             DB::commit();
-            $data = $favorite;
+            $data = [];
             $message = 'Favorite added successfully. ';
             $code = 200;
             return ['data' => $data, 'message' => $message, 'code' => $code];
