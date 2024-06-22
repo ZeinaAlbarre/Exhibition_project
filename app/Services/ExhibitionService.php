@@ -377,165 +377,6 @@ class ExhibitionService
         return ['user'=>$data,'message'=>$message,'code'=>$code];
     }
 
-
-    public function showEmployeeExhibition()
-    {
-
-        DB::beginTransaction();
-        try {
-            $user = Auth::user()->id;
-            $exhibition = [];
-            $exhibitionEmployee = Exhibition_employee::query()->where('user_id', $user)->get();
-            if (!is_null($exhibitionEmployee)) {
-                foreach ($exhibitionEmployee as $item) {
-                    $exhibitionID = $item->exhibition_id;
-                    $exhibit=Exhibition::query()->where('id', $exhibitionID)->where('status', 1)->first();
-                    if(!is_null($exhibit)){
-                        $exhibition[] = $exhibit;
-                    }
-                }
-                DB::commit();
-                $data = $exhibition;
-                $message = 'Exhibition requests have been successfully displayed. ';
-                $code = 200;
-                return ['data' => $data, 'message' => $message, 'code' => $code];
-            } else {
-                $message = 'There is no exhibition Request. ';
-                $code = 200;
-                return ['data' => [], 'message' => $message, 'code' => $code];
-            }
-        } catch (\Exception $e) {
-            DB::rollback();
-            $data = [];
-            $message = 'Error during showing employee exhibition . Please try again ';
-            $code = 500;
-            return ['data' => $data, 'message' => $message, 'code' => $code];
-
-        }
-    }
-
-    public function searchExhibition($request){
-
-        DB::beginTransaction();
-        try {
-            $title = $request['title'];
-            $exhibition=Exhibition::query()->where('title', 'LIKE', '%'.$title.'%')->get();
-            DB::commit();
-            $data = $exhibition;
-            $message = 'The exhibition search was successfully';
-            $code = 200;
-            return ['data' => $data, 'message' => $message, 'code' => $code];
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            $data = [];
-            $message = 'Error during showing exhibition search. Please try again ';
-            $code = 500;
-            return ['data' => $data, 'message' => $message, 'code' => $code];
-
-        }
-    }
-
-    public function showExhibition($id){
-        DB::beginTransaction();
-        try {
-            $exhibition=Exhibition::query()->find($id);
-            if(!is_null($exhibition)){
-                DB::commit();
-                $data = $exhibition;
-                $message = 'The exhibitions was shown successfully.';
-                $code = 200;
-            }
-            else{
-                DB::commit();
-                $data = [];
-                $message = 'invalid id';
-                $code = 400;
-            }
-            return ['data' => $data, 'message' => $message, 'code' => $code];
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            $data = [];
-            $message = 'Error during showing exhibitions. Please try again ';
-            $code = 500;
-            return ['data' => $data, 'message' => $message, 'code' => $code];
-        }
-    }
-
-    public function showAvailableExhibition(){
-
-        DB::beginTransaction();
-        try {
-            $exhibition=Exhibition::query()->where('status',3)->get();
-            DB::commit();
-            $data = $exhibition;
-            $message = 'The available exhibitions was shown successfully.';
-            $code = 200;
-            return ['data' => $data, 'message' => $message, 'code' => $code];
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            $data = [];
-            $message = 'Error during showing available exhibition. Please try again ';
-            $code = 500;
-            return ['data' => $data, 'message' => $message, 'code' => $code];
-
-        }
-    }
-
-    public function showAvailableCompanyExhibition()
-    {
-        DB::beginTransaction();
-        try {
-            $exhibition = Exhibition::query()->where('status', 2)->get();
-            DB::commit();
-            $data = $exhibition;
-            $message = 'The available companies exhibitions was shown successfully.';
-            $code = 200;
-            return ['data' => $data, 'message' => $message, 'code' => $code];
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            $data = [];
-            $message = 'Error during showing available exhibition. Please try again ';
-            $code = 500;
-            return ['data' => $data, 'message' => $message, 'code' => $code];
-
-        }
-    }
-
-    public function changeExhibitionStatus($request,$id){
-        DB::beginTransaction();
-        try {
-            $exhibition=Exhibition::query()->find($id);
-            $status=$request['status'];
-            if($status<0||$status>3){
-                DB::commit();
-                $data = [];
-                $message = 'Please enter a valid status. ';
-                $code = 200;
-            }
-            else{
-                $exhibition['status']=$status;
-                $exhibition->save();
-                DB::commit();
-                $data = $exhibition;
-                $message = 'The exhibition status changed successfully.';
-                $code = 200;
-            }
-            return ['data' => $data, 'message' => $message, 'code' => $code];
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            $data = [];
-            $message = 'Error during showing exhibition Request. Please try again ';
-            $code = 500;
-            return ['data' => $data, 'message' => $e->getMessage(), 'code' => $code];
-
-        }
-    }
-
      public function AddScheduale($exhibition_id,$request){
          $img=Str::random(32).".".time().'.'.request()->img->getClientOriginalExtension();
          DB::beginTransaction();
@@ -760,6 +601,164 @@ class ExhibitionService
             $message = 'Error during deleting stand. Please try again ';
             $code = 500;
             return ['data' => [], 'message' => $message, 'code' => $e->getCode()];
+        }
+    }
+
+    public function showEmployeeExhibition()
+    {
+
+        DB::beginTransaction();
+        try {
+            $user = Auth::user()->id;
+            $exhibition = [];
+            $exhibitionEmployee = Exhibition_employee::query()->where('user_id', $user)->get();
+            if (!is_null($exhibitionEmployee)) {
+                foreach ($exhibitionEmployee as $item) {
+                    $exhibitionID = $item->exhibition_id;
+                    $exhibit=Exhibition::query()->where('id', $exhibitionID)->where('status', 1)->first();
+                    if(!is_null($exhibit)){
+                        $exhibition[] = $exhibit;
+                    }
+                }
+                DB::commit();
+                $data = $exhibition;
+                $message = 'Exhibition requests have been successfully displayed. ';
+                $code = 200;
+                return ['data' => $data, 'message' => $message, 'code' => $code];
+            } else {
+                $message = 'There is no exhibition Request. ';
+                $code = 200;
+                return ['data' => [], 'message' => $message, 'code' => $code];
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data = [];
+            $message = 'Error during showing employee exhibition . Please try again ';
+            $code = 500;
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+
+        }
+    }
+
+    public function searchExhibition($request){
+
+        DB::beginTransaction();
+        try {
+            $title = $request['title'];
+            $exhibition=Exhibition::query()->where('title', 'LIKE', '%'.$title.'%')->get();
+            DB::commit();
+            $data = $exhibition;
+            $message = 'The exhibition search was successfully';
+            $code = 200;
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data = [];
+            $message = 'Error during showing exhibition search. Please try again ';
+            $code = 500;
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+
+        }
+    }
+
+    public function showExhibition($id){
+        DB::beginTransaction();
+        try {
+            $exhibition=Exhibition::query()->find($id);
+            if(!is_null($exhibition)){
+                DB::commit();
+                $data = $exhibition;
+                $message = 'The exhibitions was shown successfully.';
+                $code = 200;
+            }
+            else{
+                DB::commit();
+                $data = [];
+                $message = 'invalid id';
+                $code = 400;
+            }
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data = [];
+            $message = 'Error during showing exhibitions. Please try again ';
+            $code = 500;
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+        }
+    }
+
+    public function showAvailableExhibition(){
+
+        DB::beginTransaction();
+        try {
+            $exhibition=Exhibition::query()->where('status',3)->get();
+            DB::commit();
+            $data = $exhibition;
+            $message = 'The available exhibitions was shown successfully.';
+            $code = 200;
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data = [];
+            $message = 'Error during showing available exhibition. Please try again ';
+            $code = 500;
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+
+        }
+    }
+
+    public function showAvailableCompanyExhibition()
+    {
+        DB::beginTransaction();
+        try {
+            $exhibition = Exhibition::query()->where('status', 2)->get();
+            DB::commit();
+            $data = $exhibition;
+            $message = 'The available companies exhibitions was shown successfully.';
+            $code = 200;
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data = [];
+            $message = 'Error during showing available exhibition. Please try again ';
+            $code = 500;
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+
+        }
+    }
+
+    public function changeExhibitionStatus($request,$id){
+        DB::beginTransaction();
+        try {
+            $exhibition=Exhibition::query()->find($id);
+            $status=$request['status'];
+            if($status<0||$status>3){
+                DB::commit();
+                $data = [];
+                $message = 'Please enter a valid status. ';
+                $code = 200;
+            }
+            else{
+                $exhibition['status']=$status;
+                $exhibition->save();
+                DB::commit();
+                $data = $exhibition;
+                $message = 'The exhibition status changed successfully.';
+                $code = 200;
+            }
+            return ['data' => $data, 'message' => $message, 'code' => $code];
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data = [];
+            $message = 'Error during showing exhibition Request. Please try again ';
+            $code = 500;
+            return ['data' => $data, 'message' => $e->getMessage(), 'code' => $code];
+
         }
     }
 }
