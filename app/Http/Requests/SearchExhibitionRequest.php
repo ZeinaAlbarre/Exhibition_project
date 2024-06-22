@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class ExhibitionStatusRequest extends FormRequest
+class SearchExhibitionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class ExhibitionStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'numeric',
+            'title' => 'string|max:255',
         ];
     }
 

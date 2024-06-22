@@ -75,7 +75,6 @@ class UserService
         return ['user' => $data, 'message' => $message, 'code' => $code];
     }
 
-
     public function company_register($request): array
     {
         DB::beginTransaction();
@@ -251,7 +250,6 @@ class UserService
         return ['user'=>[],'message'=>$message,'code'=>$code];
     }
 
-
     public function code_check_verification($request,$id): array
     {
         DB::beginTransaction();
@@ -355,7 +353,6 @@ class UserService
         return['user'=>$data,'message'=>$message,'code'=>$code];
     }
 
-
     public function login($request):array
     {
         DB::beginTransaction();
@@ -415,7 +412,6 @@ class UserService
 
         return ['user' => $user, 'message' => $message, 'code' => $code];
     }
-
 
     public function logout(): array
     {

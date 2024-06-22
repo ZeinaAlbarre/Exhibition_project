@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('price');
             $table->string('location');
             $table->string('exhibition_map')->nullable();
-            $table->boolean('status')->default(0);
+            $table->integer('status')->default(0);
             $table->integer('number_of_stands')->nullable();
             $table->timestamps();
         });

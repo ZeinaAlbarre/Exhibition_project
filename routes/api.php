@@ -47,5 +47,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('rejectExhibition/{id}',[ExhibitionController::class,'rejectExhibition'])->name('reject.exhibition')->middleware('can:reject.exhibition');
     Route::get('deleteExhibition/{id}',[ExhibitionController::class,'deleteExhibition'])->name('delete.exhibition')->middleware('can:delete.exhibition');
     Route::post('updateExhibition/{id}',[ExhibitionController::class,'updateExhibition'])->name('update.exhibition')->middleware('can:update.exhibition');
+    Route::get('showEmployeeExhibition',[ExhibitionController::class,'showEmployeeExhibition']);
+    Route::post('searchExhibition',[ExhibitionController::class,'searchExhibition']);
+    Route::get('showExhibition/{id}',[ExhibitionController::class,'showExhibition']);
+    Route::get('showAvailableExhibition',[ExhibitionController::class,'showAvailableExhibition']);
+    Route::get('showAvailableCompanyExhibition',[ExhibitionController::class,'showAvailableCompanyExhibition']);
+    Route::post('changeExhibitionStatus/{id}',[ExhibitionController::class,'changeExhibitionStatus']);
 
 });
