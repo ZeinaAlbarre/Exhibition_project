@@ -17,7 +17,7 @@ class FavoriteService
                 'exhibition_id'=>$exhibition_id,
             ]);
             DB::commit();
-            $data = [];
+            $data = $favorite;
             $message = 'Favorite added successfully. ';
             $code = 200;
             return ['data' => $data, 'message' => $message, 'code' => $code];
@@ -38,7 +38,7 @@ class FavoriteService
             $favorite=Favorite::query()->find($id);
             $favorite->delete();
             DB::commit();
-            $data = $favorite;
+            $data = [];
             $message = 'Favorite deleted successfully. ';
             $code = 200;
             return ['data' => $data, 'message' => $message, 'code' => $code];
