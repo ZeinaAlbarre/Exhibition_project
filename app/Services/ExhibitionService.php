@@ -745,9 +745,7 @@ class ExhibitionService
         return ['data' => $data, 'message' => $message, 'code' => $code];
 
     }
-
-
-
+    
     public function showAvailableExhibition(){
 
         DB::beginTransaction();
