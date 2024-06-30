@@ -53,33 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('showAvailableExhibition',[ExhibitionController::class,'showAvailableExhibition']);
     Route::get('showAvailableCompanyExhibition',[ExhibitionController::class,'showAvailableCompanyExhibition']);
     Route::post('changeExhibitionStatus/{id}',[ExhibitionController::class,'changeExhibitionStatus']);
+    Route::post('addExhibitionSection/{id}',[ExhibitionController::class,'addExhibitionSection']);
+    Route::get('showExhibitionSection/{section_id}',[ExhibitionController::class,'showExhibitionSection']);
 
-
-    Route::controller(ExhibitionController::class)->group(function () {
-        Route::post('/exhibitions/sections/{section_id}/{exhibition_id}', 'addExhibitionSection');
-        Route::post('/exhibitions/{exhibition_id}/media', 'addExhibitionMedia');
-        Route::delete('/exhibitions/media/{media_id}', 'deleteExhibitionMedia');
-
-
-        Route::get('/organizers/{organizer_id}/exhibitions', 'showOrganizerExhibition');
-
-
-        Route::get('/companies/{company_id}', 'showCompany');
-
-        Route::get('/exhibitions/{exhibition_id}/requests', 'showCompanyRequests');
-        Route::post('/exhibitions/{exhibition_id}/companies/{company_id}/accept', 'acceptCompanyRequest');
-        Route::post('/exhibitions/{exhibition_id}/companies/{company_id}/reject', 'rejectCompanyRequest');
-
-        // Schedule routes
-        Route::post('/exhibitions/{exhibition_id}/schedules', 'addSchedule');
-        Route::delete('/exhibitions/schedules/{schedule_id}', 'deleteSchedule');
-        Route::put('/exhibitions/schedules/{schedule_id}', 'updateSchedule');
-        Route::get('/exhibitions/schedules/{schedule_id}', 'showSchedule');
-        Route::get('/exhibitions/{exhibition_id}/schedules', 'showExhibitionSchedule');
-
-        // Stand routes
-        Route::post('/exhibitions/{exhibition_id}/stands', 'addStand');
-        Route::put('/exhibitions/stands/{stand_id}', 'updateStand');
-        Route::delete('/exhibitions/stands/{stand_id}', 'deleteStand');
-    });
 });

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\addStandRequest;
 use App\Http\Requests\ExhibitionRequest;
+use App\Http\Requests\ExhibitionSectionRequest;
 use App\Http\Requests\ExhibitionStatusRequest;
 use App\Http\Requests\SearchExhibitionRequest;
 use App\Http\Requests\UpdateExhibitionRequest;
@@ -99,6 +99,19 @@ class ExhibitionController extends Controller
 
     }
 
+    public function addExhibitionSection(ExhibitionSectionRequest $request,$id): JsonResponse
+    {
+        $data=[];
+        try{
+            $data=$this->exhibitionService->addExhibitionSection($request->validated(),$id);
+            return Response::Success($data['data'],$data['message']);
+        }catch (\Throwable $th){
+            $message=$th->getMessage();
+            return Response::Error($data,$message);
+        }
+
+    }
+
     public function showEmployeeExhibition(): JsonResponse
     {
         $data=[];
@@ -130,6 +143,19 @@ class ExhibitionController extends Controller
         $data=[];
         try{
             $data=$this->exhibitionService->showExhibition($id);
+            return Response::Success($data['data'],$data['message']);
+        }catch (\Throwable $th){
+            $message=$th->getMessage();
+            return Response::Error($data,$message);
+        }
+
+    }
+
+    public function showExhibitionSection($section_id): JsonResponse
+    {
+        $data=[];
+        try{
+            $data=$this->exhibitionService->showExhibitionSection($section_id);
             return Response::Success($data['data'],$data['message']);
         }catch (\Throwable $th){
             $message=$th->getMessage();
@@ -176,199 +202,5 @@ class ExhibitionController extends Controller
         }
 
     }
-
-    public function addExhibitionSection($section_id, $exhibition_id)
-    {
-        try {
-            $response = $this->exhibitionService->addExhibitionSection($section_id, $exhibition_id);
-
-            return Response::Success($response['data'], $response['message'], $response['code']);
-        } catch (\Throwable $th) {
-            return Response::Error([], $th->getMessage());
-        }
-    }
-
-    public function addExhibitionMedia(addExhibitionMediaRequest $request, $exhibition_id)
-    {
-        try {
-            $response = $this->exhibitionService->addExhibitionMedia($request, $exhibition_id);
-
-            return Response::Success($response['data'], $response['message'], $response['code']);
-        } catch (\Throwable $th) {
-            return Response::Error([], $th->getMessage());
-        }
-    }
-
-    public function deleteExhibitionMedia($media_id)
-    {
-        try {
-            $response = $this->exhibitionService->deleteExhibitionMedia($media_id);
-
-            return Response::Success([], $response['message'], $response['code']);
-        } catch (\Throwable $th) {
-            return Response::Error([], $th->getMessage());
-        }
-    }
-
-    public function showOrganizerExhibition($organizer_id)
-    {
-        try {
-            $response = $this->exhibitionService->showOrganizerExhibition($organizer_id);
-
-            return Response::Success($response['data'], $response['message'], $response['code']);
-        } catch (\Throwable $th) {
-            return Response::Error([], $th->getMessage());
-        }
-    }
-
-    public function showCompany($company_id)
-    {
-        try {
-            $response = $this->exhibitionService->showCompany($company_id);
-
-            return Response::Success($response['data'], $response['message'], $response['code']);
-        } catch (\Throwable $th) {
-            return Response::Error([], $th->getMessage());
-        }
-    }
-
-
-
-
-
-
-    public function showCompanyRequests($exhibition_id)
-    {
-        try {
-            $response = $this->exhibitionService->showCompanyRequests($exhibition_id);
-            return Response::Success($response['data'], $response['message']);
-        } catch (\Throwable $th) {
-            $message = $th->getMessage();
-            return Response::Error([], $message);
-        }
-    }
-
-    public function acceptCompanyRequest($exhibition_id, $company_id): JsonResponse
-    {
-        $data=[];
-        try{
-            $data=$this->exhibitionService->acceptCompanyRequest($exhibition_id, $company_id);
-            return Response::Success($data['data'],$data['message']);
-        }catch (\Throwable $th){
-            $message=$th->getMessage();
-            return Response::Error($data,$message);
-        }
-    }
-
-    public function rejectCompanyRequest($exhibition_id, $company_id): JsonResponse
-    { $data=[];
-        try{
-            $data=$this->exhibitionService->rejectCompanyRequest($exhibition_id, $company_id);
-            return Response::Success($data['data'],$data['message']);
-        }catch (\Throwable $th){
-            $message=$th->getMessage();
-            return Response::Error($data,$message);
-        }
-    }
-
-    public function addSchedule($exhibition_id, addScheduleRequest $request)
-    {
-        $data=[];
-        try{
-            $data=$this->exhibitionService->addSchedule($exhibition_id, $request);
-            return Response::Success($data['data'],$data['message']);
-        }catch (\Throwable $th){
-            $message=$th->getMessage();
-            return Response::Error($data,$message);
-        }
-    }
-
-    public function deleteSchedule($schedule_id)
-    {
-        $data=[];
-        try{
-            $data=$this->exhibitionService->deleteSchedule($schedule_id);
-            return Response::Success($data['data'],$data['message']);
-        }catch (\Throwable $th){
-            $message=$th->getMessage();
-            return Response::Error($data,$message);
-        }
-    }
-
-    public function updateSchedule($schedule_id, Request $request)
-    {
-        $data=[];
-        try{
-            $data=$this->exhibitionService->updateSchedule($schedule_id,  $request);
-            return Response::Success($data['data'],$data['message']);
-        }catch (\Throwable $th){
-            $message=$th->getMessage();
-            return Response::Error($data,$message);
-        }
-    }
-
-    public function showSchedule($schedule_id)
-    {
-        $data=[];
-        try{
-            $data=$this->exhibitionService->showSchedule($schedule_id);
-            return Response::Success($data['data'],$data['message']);
-        }catch (\Throwable $th){
-            $message=$th->getMessage();
-            return Response::Error($data,$message);
-        }
-    }
-
-    public function showExhibitionSchedule($exhibition_id)
-    {
-        $data=[];
-        try{
-            $data=$this->exhibitionService-> showExhibitionSchedule($exhibition_id);
-            return Response::Success($data['data'],$data['message']);
-        }catch (\Throwable $th){
-            $message=$th->getMessage();
-            return Response::Error($data,$message);
-        }
-    }
-
-    public function addStand(addStandRequest $request, $exhibition_id)
-    {
-        $data=[];
-        try{
-            $data=$this->exhibitionService->addStand($request, $exhibition_id);
-            return Response::Success($data['data'],$data['message']);
-        }catch (\Throwable $th){
-            $message=$th->getMessage();
-            return Response::Error($data,$message);
-        }
-    }
-
-    public function updateStand(Request $request, $stand_id)
-    {
-        $data=[];
-        try{
-            $data=$this->exhibitionService->updateStand($request, $stand_id);
-            return Response::Success($data['data'],$data['message']);
-        }catch (\Throwable $th){
-            $message=$th->getMessage();
-            return Response::Error($data,$message);
-        }
-    }
-
-    public function deleteStand($stand_id)
-    {
-        $data=[];
-        try{
-            $data=$this->exhibitionService->deleteStand($stand_id);
-            return Response::Success($data['data'],$data['message']);
-        }catch (\Throwable $th){
-            $message=$th->getMessage();
-            return Response::Error($data,$message);
-        }
-    }
-
-
-
-
 
 }
