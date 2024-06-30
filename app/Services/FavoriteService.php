@@ -38,7 +38,7 @@ class FavoriteService
             $favorite=Favorite::query()->find($id);
             $favorite->delete();
             DB::commit();
-            $data = $favorite;
+            $data = [];
             $message = 'Favorite deleted successfully. ';
             $code = 200;
             return ['data' => $data, 'message' => $message, 'code' => $code];
