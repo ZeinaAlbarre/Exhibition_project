@@ -22,8 +22,8 @@ class RolesPremissionsSeeder extends Seeder
         $organizerRole=Role::create(['name'=>'organizer']);
 
         $permissions=[
-            'add.employee','delete.employee','add.exhibition','delete.exhibition','accept.exhibition','reject.exhibition','visitor.register','organizer.register',
-            'add.organizer','delete.organizer','accept.company','reject.company','delete.account',
+            'add.employee','delete.employee','add.exhibition','update.exhibition','delete.exhibition','accept.exhibition','reject.exhibition','visitor.register','organizer.register',
+            'add.organizer','delete.organizer','accept.company','reject.company','delete.account','change.exhibition.status',
         ];
 
         foreach ($permissions as $permission){
@@ -32,8 +32,8 @@ class RolesPremissionsSeeder extends Seeder
 
         //Assign Pemissions to roles
         $adminRole->syncPermissions(['add.employee','delete.employee','accept.company','reject.company']);
-        $employeeRole->givePermissionTo(['add.exhibition','accept.company','reject.company','delete.exhibition','accept.exhibition','reject.exhibition','update.exhibition']);
-        $organizerRole->givePermissionTo(['add.exhibition','delete.account','update.exhibition']);
+        $employeeRole->givePermissionTo(['add.exhibition','accept.company','reject.company','delete.exhibition','accept.exhibition','reject.exhibition','update.exhibition','change.exhibition.status']);
+        $organizerRole->givePermissionTo(['add.exhibition','delete.account','update.exhibition','change.exhibition.status']);
         $companyRole->givePermissionTo(['delete.account']);
         $visitorRole->givePermissionTo(['visitor.register','delete.account']);
 
